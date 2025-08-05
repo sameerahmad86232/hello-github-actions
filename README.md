@@ -1,5 +1,16 @@
-## Welcome to "Hello World" with GitHub Actions
+# PULSE
 
-This course will walk you through writing your first action and using it with a workflow file. 
+A minimal animated chat UI inspired by WhatsApp, built with React, Vite, Styled-Components and Framer Motion.
 
-**Ready to get started? Navigate to the first issue.**
+## Getting Started
+
+```bash
+pnpm install   # or npm install / yarn install
+pnpm dev       # starts the development server
+```
+
+Then open http://localhost:5173 in your browser.
+
+---
+
+This project is just a front-end demo; messages are stored locally and not persisted.
