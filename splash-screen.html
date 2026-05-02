@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillNest AI - Splash Screen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .splash-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 900px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 30px 40px;
+            position: relative;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 140px;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hexagon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.4));
+        }
+
+        .hexagon-inner {
+            width: 100px;
+            height: 100px;
+            background: #ffffff;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+
+        .code-symbol {
+            font-size: 42px;
+            font-weight: bold;
+            color: #1e3a5f;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Pixel dissolution effect */
+        .pixel-particles {
+            position: absolute;
+            top: -10px;
+            left: -15px;
+            width: 60px;
+            height: 60px;
+        }
+
+        .pixel {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+
+        .pixel:nth-child(1) { top: 0; left: 10px; animation: float 2s ease-in-out infinite; }
+        .pixel:nth-child(2) { top: 15px; left: 0; animation: float 2.5s ease-in-out infinite 0.3s; }
+        .pixel:nth-child(3) { top: 30px; left: 5px; animation: float 2.2s ease-in-out infinite 0.6s; }
+        .pixel:nth-child(4) { top: 10px; left: 25px; animation: float 2.8s ease-in-out infinite 0.2s; }
+        .pixel:nth-child(5) { top: 45px; left: 15px; animation: float 2.4s ease-in-out infinite 0.5s; }
+        .pixel:nth-child(6) { top: 25px; left: 35px; animation: float 2.6s ease-in-out infinite 0.4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-8px) rotate(180deg); opacity: 0.4; }
+        }
+
+        /* Sparkle icon */
+        .sparkle {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            width: 24px;
+            height: 24px;
+            animation: sparkle-animation 1.5s ease-in-out infinite;
+        }
+
+        .sparkle svg {
+            width: 100%;
+            height: 100%;
+            fill: #fbbf24;
+            filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.5));
+        }
+
+        @keyframes sparkle-animation {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.2) rotate(15deg); opacity: 0.8; }
+        }
+
+        /* App Name */
+        .app-name {
+            margin-top: 35px;
+            text-align: center;
+        }
+
+        .app-name h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        .skillnest {
+            color: #1e3a5f;
+        }
+
+        .ai {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Tagline */
+        .tagline {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #9ca3af;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mascot Section */
+        .mascot-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .mascot-container {
+            position: relative;
+            width: 200px;
+            height: 220px;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 40px;
+            background: linear-gradient(180deg, #86efac, #4ade80);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        .parrot {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 140px;
+        }
+
+        /* Parrot Body */
+        .parrot-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 85px;
+            background: linear-gradient(180deg, #4ade80 0%, #22c55e 60%, #16a34a 100%);
+            border-radius: 50% 50% 45% 45%;
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Parrot Head */
+        .parrot-head {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 65px;
+            height: 60px;
+            background: linear-gradient(180deg, #4ade80 0%, #22c55e 100%);
+            border-radius: 50%;
+            box-shadow: inset -3px -3px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Parrot Face */
+        .parrot-face {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 45px;
+            background: linear-gradient(180deg, #fef3c7, #fde68a);
+            border-radius: 45% 45% 50% 50%;
+        }
+
+        /* Eyes */
+        .eye {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #1e3a5f;
+            border-radius: 50%;
+            top: 8px;
+        }
+
+        .eye::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffffff;
+            border-radius: 50%;
+            top: 2px;
+            left: 3px;
+        }
+
+        .eye.left { left: 8px; }
+        .eye.right { right: 8px; }
+
+        /* Beak */
+        .beak {
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 16px;
+            background: linear-gradient(180deg, #9ca3af, #6b7280);
+            border-radius: 50% 50% 50% 50%;
+        }
+
+        /* Wings */
+        .wing {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50% 50% 50% 50%;
+            top: 55px;
+            box-shadow: inset -2px -2px 8px rgba(0,0,0,0.1);
+        }
+
+        .wing.left {
+            left: 5px;
+            transform: rotate(-10deg);
+        }
+
+        .wing.right {
+            right: 5px;
+            transform: rotate(10deg);
+        }
+
+        /* Smile */
+        .smile {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 10px;
+            border-bottom: 3px solid #1e3a5f;
+            border-radius: 0 0 50% 50%;
+        }
+
+        /* Floating particles around parrot */
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .float-pixel {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            border-radius: 3px;
+            opacity: 0.7;
+        }
+
+        .float-pixel:nth-child(1) { top: 20px; left: 20px; animation: float-particle 3s ease-in-out infinite; }
+        .float-pixel:nth-child(2) { top: 50px; right: 30px; animation: float-particle 3.5s ease-in-out infinite 0.5s; }
+        .float-pixel:nth-child(3) { bottom: 60px; left: 10px; animation: float-particle 2.8s ease-in-out infinite 1s; }
+        .float-pixel:nth-child(4) { bottom: 30px; right: 20px; animation: float-particle 3.2s ease-in-out infinite 0.7s; }
+
+        @keyframes float-particle {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-15px) rotate(180deg); opacity: 0.4; }
+        }
+
+        /* Loading Section */
+        .loading-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 65%;
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+            border-radius: 10px;
+            animation: loading 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 30%; }
+            50% { width: 70%; }
+            100% { width: 30%; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .status-message {
+            font-size: 14px;
+            color: #22c55e;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* Soft shadows */
+        .shadow-effect {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo-container">
+                <div class="hexagon">
+                    <div class="hexagon-inner">
+                        <span class="code-symbol">&lt; / &gt;</span>
+                    </div>
+                </div>
+                
+                <!-- Pixel dissolution effect -->
+                <div class="pixel-particles">
+                    <div class="pixel"></div>
+                    <div class="pixel"></div>
+                    <div class="pixel"></div>
+                    <div class="pixel"></div>
+                    <div class="pixel"></div>
+                    <div class="pixel"></div>
+                </div>
+
+                <!-- Sparkle -->
+                <div class="sparkle">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="app-name">
+                <h1>
+                    <span class="skillnest">SKILLNEST</span> 
+                    <span class="ai">AI</span>
+                </h1>
+            </div>
+
+            <p class="tagline">Learn. Code. Build. Grow with AI.</p>
+        </div>
+
+        <!-- Mascot Section -->
+        <div class="mascot-section">
+            <div class="mascot-container">
+                <div class="ground"></div>
+                <div class="parrot">
+                    <div class="parrot-body"></div>
+                    <div class="parrot-head">
+                        <div class="parrot-face">
+                            <div class="eye left"></div>
+                            <div class="eye right"></div>
+                            <div class="beak"></div>
+                            <div class="smile"></div>
+                        </div>
+                    </div>
+                    <div class="wing left"></div>
+                    <div class="wing right"></div>
+                </div>
+                
+                <!-- Floating particles -->
+                <div class="floating-particles">
+                    <div class="float-pixel"></div>
+                    <div class="float-pixel"></div>
+                    <div class="float-pixel"></div>
+                    <div class="float-pixel"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="loading-section">
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+            <p class="status-message">Preparing your learning journey...</p>
+        </div>
+    </div>
+</body>
+</html>
