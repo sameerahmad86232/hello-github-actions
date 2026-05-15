@@ -1,33 +1,50 @@
-```gitignore
-# Python
+# Dependencies
+node_modules/
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
 
-# Dependencies
-.venv/
-venv/
-env/
+# Environment variables
 .env
-.env.local
-.env.*
+config/.env
 
-# Logs and temp files
+# Logs
+logs/
 *.log
-*.tmp
-*.swp
+npm-debug.log*
 
-# Editors
-.vscode/
-.idea/
-
-# Build artifacts
+# Build outputs
 dist/
 build/
-*.egg-info/
-.coverage
-htmlcov/
-.mypy_cache/
-.pytest_cache/
-```
+client/build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Screenshots from automation
+screenshots/
+
+# Video recordings
+recordings/
+
+# Database
+*.mdb
+*.sqlite
+
+# Redis dump
+dump.rdb
+
