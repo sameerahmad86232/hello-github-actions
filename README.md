@@ -11,6 +11,16 @@ A powerful browser automation tool that automates user tasks via natural languag
 - **Multiple Browsers**: Supports Chrome and Firefox
 - **Screenshot Capability**: Capture pages during automation
 - **Smart Element Detection**: Tries multiple selector strategies automatically
+- **Dropdown Selection**: Select options from dropdown menus by value, text, or index
+- **Mouse Actions**: Hover, double-click, and right-click support
+- **JavaScript Execution**: Run custom JavaScript code in the browser
+- **Frame/Window Management**: Switch between iframes and browser tabs/windows
+- **Attribute Extraction**: Get any attribute value from elements (href, src, class, etc.)
+- **URL Waiting**: Wait for URL changes containing specific text
+- **Page Export**: Save current page HTML to file
+- **Task Logging**: Automatic logging of all executed tasks with timestamps
+- **Export Task History**: Save command history to JSON for auditing
+- **Automatic Downloads**: Configurable download directory for file downloads
 
 ## Installation
 
@@ -120,12 +130,17 @@ python browser_automation.py --no-headless --commands "go to example.com" "take 
 - `click on <element>` - Click on an element
 - `press <element>` - Press a button
 - `tap <element>` - Tap an element (mobile-like)
+- `double click <element>` - Double click an element
+- `right click <element>` - Right click (context menu)
+- `hover over <element>` - Hover mouse over element
 
 ### Form Filling
 - `fill <field> with <text>` - Fill a form field
 - `enter <text> into <field>` - Enter text into a field
 - `type <text> in <field>` - Type text in a field
 - `input <text> in <field>` - Input text in a field
+- `select <option> from <dropdown>` - Select dropdown option
+- `choose <option> in <dropdown>` - Choose option in dropdown
 
 ### Search
 - `search for <query>` - Search on Google
@@ -140,9 +155,26 @@ python browser_automation.py --no-headless --commands "go to example.com" "take 
 - `scroll down to <element>` - Scroll down to an element
 - `wait for <element>` - Wait for element to appear
 - `pause until <element>` - Wait for element
+- `wait for url <text>` - Wait for URL containing text
 - `get text from <element>` - Extract text from element
 - `read <element>` - Read text from element
 - `extract <element>` - Extract content from element
+- `get <attr> attribute from <element>` - Get attribute value
+- `attribute <attr> of <element>` - Get attribute value
+- `save page` - Save current page HTML to file
+- `save html` - Save current page HTML
+- `export page` - Export page HTML
+
+### Advanced
+- `run javascript <code>` - Execute JavaScript code
+- `execute js <code>` - Execute JavaScript code
+- `javascript <code>` - Execute JavaScript code
+- `switch to frame <id>` - Switch to iframe by id/name/index
+- `go to frame <id>` - Go to iframe
+- `switch to window <n>` - Switch to browser window/tab by index
+- `go to tab <n>` - Go to tab by index
+- `export log` - Export task log to JSON file
+- `save task log` - Save task history
 
 ### Other
 - `submit` - Submit current form
@@ -179,7 +211,35 @@ python browser_automation.py --commands \
   "take screenshot"
 ```
 
-### Example 4: Using Command File
+### Example 4: Dropdown Selection
+```bash
+python browser_automation.py --commands \
+  "go to example.com/form" \
+  "select 'United States' from country" \
+  "fill name with John Doe" \
+  "click submit"
+```
+
+### Example 5: Advanced Mouse Actions
+```bash
+python browser_automation.py --commands \
+  "go to example.com" \
+  "hover over menu" \
+  "click dropdown-item" \
+  "double click editable-field" \
+  "right click context-target"
+```
+
+### Example 6: JavaScript Execution
+```bash
+python browser_automation.py --commands \
+  "go to example.com" \
+  "run javascript document.title = 'Modified Title'" \
+  "get href attribute from main-link" \
+  "save page"
+```
+
+### Example 7: Using Command File
 ```bash
 # automation_tasks.txt
 # Login to a website and capture homepage

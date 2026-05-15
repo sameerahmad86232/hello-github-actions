@@ -5,14 +5,17 @@ Automates user tasks via natural language prompts using Selenium.
 """
 
 import re
+import os
 import time
+import json
 import argparse
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
     TimeoutException,
@@ -29,6 +32,9 @@ class BrowserAutomation:
         self.driver = None
         self.headless = headless
         self.wait_time = 10
+        self.command_history = []
+        self.task_log = []
+        self.downloads_path = None
 
     def start_browser(self):
         """Start the browser instance."""
@@ -41,6 +47,17 @@ class BrowserAutomation:
         options.add_argument("--disable-gpu")
         options.add_argument("--window-size=1920,1080")
         options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        
+        # Setup downloads directory
+        self.downloads_path = os.path.join(os.getcwd(), "downloads")
+        os.makedirs(self.downloads_path, exist_ok=True)
+        prefs = {
+            "download.default_directory": self.downloads_path,
+            "download.prompt_for_download": False,
+            "download.directory_upgrade": True,
+            "safebrowsing.enabled": True,
+        }
+        options.add_experimental_option("prefs", prefs)
         
         try:
             self.driver = webdriver.Chrome(options=options)
@@ -176,9 +193,180 @@ class BrowserAutomation:
             print(f"✗ Timeout waiting for: {selector}")
             return False
 
+    def select_dropdown(self, selector, value, by=By.CSS_SELECTOR, by_value="value"):
+        """Select an option from a dropdown menu."""
+        try:
+            element = self.find_element(selector, by)
+            if element:
+                select = Select(element)
+                if by_value == "value":
+                    select.select_by_value(value)
+                elif by_value == "text":
+                    select.select_by_visible_text(value)
+                elif by_value == "index":
+                    select.select_by_index(int(value))
+                print(f"✓ Selected '{value}' in dropdown: {selector}")
+                return True
+            else:
+                print(f"✗ Dropdown not found: {selector}")
+                return False
+        except Exception as e:
+            print(f"✗ Selection failed: {e}")
+            return False
+
+    def hover_over(self, selector, by=By.CSS_SELECTOR):
+        """Hover mouse over an element."""
+        try:
+            from selenium.webdriver.common.action_chains import ActionChains
+            element = self.find_element(selector, by)
+            if element:
+                actions = ActionChains(self.driver)
+                actions.move_to_element(element).perform()
+                print(f"✓ Hovered over: {selector}")
+                return True
+            else:
+                print(f"✗ Element not found: {selector}")
+                return False
+        except Exception as e:
+            print(f"✗ Hover failed: {e}")
+            return False
+
+    def double_click(self, selector, by=By.CSS_SELECTOR):
+        """Double click an element."""
+        try:
+            from selenium.webdriver.common.action_chains import ActionChains
+            element = self.find_element(selector, by)
+            if element:
+                actions = ActionChains(self.driver)
+                actions.double_click(element).perform()
+                print(f"✓ Double clicked: {selector}")
+                return True
+            else:
+                print(f"✗ Element not found: {selector}")
+                return False
+        except Exception as e:
+            print(f"✗ Double click failed: {e}")
+            return False
+
+    def right_click(self, selector, by=By.CSS_SELECTOR):
+        """Right click (context click) an element."""
+        try:
+            from selenium.webdriver.common.action_chains import ActionChains
+            element = self.find_element(selector, by)
+            if element:
+                actions = ActionChains(self.driver)
+                actions.context_click(element).perform()
+                print(f"✓ Right clicked: {selector}")
+                return True
+            else:
+                print(f"✗ Element not found: {selector}")
+                return False
+        except Exception as e:
+            print(f"✗ Right click failed: {e}")
+            return False
+
+    def get_attribute(self, selector, attribute, by=By.CSS_SELECTOR):
+        """Get an attribute value from an element."""
+        try:
+            element = self.find_element(selector, by)
+            if element:
+                attr_value = element.get_attribute(attribute)
+                print(f"📄 Attribute '{attribute}' value: {attr_value}")
+                return attr_value
+            else:
+                print(f"✗ Element not found: {selector}")
+                return None
+        except Exception as e:
+            print(f"✗ Get attribute failed: {e}")
+            return None
+
+    def execute_javascript(self, script):
+        """Execute custom JavaScript code."""
+        try:
+            result = self.driver.execute_script(script)
+            print(f"✓ JavaScript executed successfully")
+            return result
+        except Exception as e:
+            print(f"✗ JavaScript execution failed: {e}")
+            return None
+
+    def wait_for_url_contains(self, text, timeout=10):
+        """Wait until URL contains specific text."""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.url_contains(text)
+            )
+            print(f"✓ URL now contains: {text}")
+            return True
+        except TimeoutException:
+            print(f"✗ Timeout waiting for URL containing: {text}")
+            return False
+
+    def switch_to_frame(self, frame_identifier):
+        """Switch to a frame by name, id, or index."""
+        try:
+            self.driver.switch_to.frame(frame_identifier)
+            print(f"✓ Switched to frame: {frame_identifier}")
+            return True
+        except Exception as e:
+            print(f"✗ Switch to frame failed: {e}")
+            return False
+
+    def switch_to_window(self, window_index=0):
+        """Switch to a different browser window/tab."""
+        try:
+            windows = self.driver.window_handles
+            if 0 <= window_index < len(windows):
+                self.driver.switch_to.window(windows[window_index])
+                print(f"✓ Switched to window {window_index}")
+                return True
+            else:
+                print(f"✗ Window index {window_index} out of range")
+                return False
+        except Exception as e:
+            print(f"✗ Switch to window failed: {e}")
+            return False
+
+    def save_page_html(self, filename=None):
+        """Save the current page HTML to a file."""
+        try:
+            if not filename:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"page_{timestamp}.html"
+            
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(self.driver.page_source)
+            print(f"✓ Page saved to: {filename}")
+            return True
+        except Exception as e:
+            print(f"✗ Save page failed: {e}")
+            return False
+
+    def log_task(self, prompt, success=True):
+        """Log a task execution to the task log."""
+        self.task_log.append({
+            "timestamp": datetime.now().isoformat(),
+            "prompt": prompt,
+            "success": success
+        })
+
+    def export_task_log(self, filename="task_log.json"):
+        """Export the task log to a JSON file."""
+        try:
+            with open(filename, 'w') as f:
+                json.dump(self.task_log, f, indent=2)
+            print(f"✓ Task log exported to: {filename}")
+            return True
+        except Exception as e:
+            print(f"✗ Export task log failed: {e}")
+            return False
+
     def parse_prompt(self, prompt):
         """Parse natural language prompt and extract action."""
         prompt_lower = prompt.lower().strip()
+        
+        # Add to command history
+        self.command_history.append(prompt)
         
         actions = {
             'navigate': [r'go to\s+(.+)', r'navigate to\s+(.+)', r'open\s+(.+)', r'visit\s+(.+)', r'browse\s+(.+)'],
@@ -190,6 +378,17 @@ class BrowserAutomation:
             'wait': [r'wait for\s+(.+)', r'pause until\s+(.+)'],
             'get_text': [r'get text from\s+(.+)', r'read\s+(.+)', r'extract\s+(.+)'],
             'submit': [r'submit', r'press enter', r'hit enter'],
+            'select': [r'select\s+(.+?)\s+from\s+(.+)', r'choose\s+(.+?)\s+in\s+(.+)'],
+            'hover': [r'hover over\s+(.+)', r'mouse over\s+(.+)'],
+            'double_click': [r'double click\s+(?:on\s+)?(.+)', r'double-click\s+(.+)'],
+            'right_click': [r'right click\s+(?:on\s+)?(.+)', r'context click\s+(.+)'],
+            'get_attr': [r'get\s+(.+?)\s+attribute from\s+(.+)', r'attribute\s+(.+?)\s+of\s+(.+)'],
+            'js': [r'run javascript\s+(.+)', r'execute js\s+(.+)', r'javascript\s+(.+)'],
+            'wait_url': [r'wait for url.*?(.+)', r'url contains\s+(.+)'],
+            'switch_frame': [r'switch to frame\s+(.+)', r'go to frame\s+(.+)'],
+            'switch_window': [r'switch to window\s+(\d+)', r'go to tab\s+(\d+)'],
+            'save_html': [r'save page', r'save html', r'export page'],
+            'export_log': [r'export log', r'save task log'],
         }
         
         for action, patterns in actions.items():
@@ -290,6 +489,78 @@ class BrowserAutomation:
                 print("✓ Form submitted")
                 return True
             
+            elif action == 'select':
+                if len(params) == 2:
+                    value, dropdown = params
+                else:
+                    dropdown, value = params[0], params[1]
+                dropdown = dropdown.strip()
+                value = value.strip()
+                selectors_to_try = [
+                    f"[name='{dropdown}']",
+                    f"[id='{dropdown}']",
+                    dropdown,
+                ]
+                for sel in selectors_to_try:
+                    if self.select_dropdown(sel, value):
+                        return True
+                return False
+            
+            elif action == 'hover':
+                selector = params[0].strip()
+                return self.hover_over(selector)
+            
+            elif action == 'double_click':
+                selector = params[0].strip()
+                return self.double_click(selector)
+            
+            elif action == 'right_click':
+                selector = params[0].strip()
+                return self.right_click(selector)
+            
+            elif action == 'get_attr':
+                if len(params) == 2:
+                    attr, element = params
+                else:
+                    element, attr = params[0], params[1]
+                element = element.strip()
+                attr = attr.strip()
+                selectors_to_try = [
+                    f"[name='{element}']",
+                    f"[id='{element}']",
+                    element,
+                ]
+                for sel in selectors_to_try:
+                    result = self.get_attribute(sel, attr)
+                    if result is not None:
+                        return True
+                return False
+            
+            elif action == 'js':
+                script = params[0].strip()
+                return self.execute_javascript(script) is not None
+            
+            elif action == 'wait_url':
+                text = params[0].strip()
+                return self.wait_for_url_contains(text)
+            
+            elif action == 'switch_frame':
+                frame_id = params[0].strip()
+                try:
+                    return self.switch_to_frame(int(frame_id))
+                except ValueError:
+                    return self.switch_to_frame(frame_id)
+            
+            elif action == 'switch_window':
+                window_idx = int(params[0].strip())
+                return self.switch_to_window(window_idx)
+            
+            elif action == 'save_html':
+                return self.save_page_html()
+            
+            elif action == 'export_log':
+                return self.export_task_log()
+            
             else:
                 print(f"⚠ Unknown action: {action}")
                 return False
@@ -304,16 +575,37 @@ class BrowserAutomation:
         print("🌐 Browser Automation Tool - Interactive Mode")
         print("="*60)
         print("\nAvailable commands:")
-        print("  - 'go to <url>' - Navigate to a website")
-        print("  - 'click <element>' - Click on an element")
-        print("  - 'fill <field> with <text>' - Fill a form field")
-        print("  - 'search for <query>' - Search on Google")
-        print("  - 'take screenshot' - Capture current page")
-        print("  - 'scroll to <element>' - Scroll to an element")
-        print("  - 'wait for <element>' - Wait for element to appear")
-        print("  - 'get text from <element>' - Extract text")
-        print("  - 'quit' or 'exit' - Close browser and exit")
-        print("  - 'help' - Show this help message")
+        print("  Navigation:")
+        print("    • go to <url> - Navigate to a website")
+        print("    • search for <query> - Search on Google")
+        print()
+        print("  Interaction:")
+        print("    • click <element> - Click on an element")
+        print("    • double click <element> - Double click")
+        print("    • right click <element> - Right click")
+        print("    • hover over <element> - Hover mouse")
+        print("    • fill <field> with <text> - Fill form field")
+        print("    • select <option> from <dropdown> - Select dropdown option")
+        print("    • submit - Submit current form")
+        print()
+        print("  Utilities:")
+        print("    • take screenshot - Capture current page")
+        print("    • scroll to <element> - Scroll to element")
+        print("    • wait for <element> - Wait for element")
+        print("    • wait for url <text> - Wait for URL change")
+        print("    • get text from <element> - Extract text")
+        print("    • get <attr> attribute from <element> - Get attribute")
+        print("    • save page - Save HTML to file")
+        print()
+        print("  Advanced:")
+        print("    • run javascript <code> - Execute JS")
+        print("    • switch to frame <id> - Switch to iframe")
+        print("    • switch to window <n> - Switch to tab/window")
+        print("    • export log - Save task log to JSON")
+        print()
+        print("  Other:")
+        print("    • help - Show this message")
+        print("    • quit/exit - Close browser and exit")
         print("="*60 + "\n")
         
         if not self.start_browser():
@@ -328,6 +620,9 @@ class BrowserAutomation:
                     continue
                 
                 if prompt.lower() in ['quit', 'exit', 'q']:
+                    # Export task log before exiting
+                    if self.task_log:
+                        self.export_task_log()
                     print("\n👋 Closing browser...")
                     self.close_browser()
                     break
@@ -336,14 +631,19 @@ class BrowserAutomation:
                     self.print_help()
                     continue
                 
-                self.execute_task(prompt)
+                success = self.execute_task(prompt)
+                self.log_task(prompt, success)
                 
             except KeyboardInterrupt:
                 print("\n\n👋 Interrupted. Closing browser...")
+                if self.task_log:
+                    self.export_task_log()
                 self.close_browser()
                 break
             except EOFError:
                 print("\n\n👋 EOF received. Closing browser...")
+                if self.task_log:
+                    self.export_task_log()
                 self.close_browser()
                 break
 
@@ -358,10 +658,13 @@ class BrowserAutomation:
         print("  • open google.com")
         print()
         print("Interaction:")
-        print("  • click login")
-        print("  • click on button#submit")
+        print("  • click login / click on button#submit")
+        print("  • double click item / right click menu")
+        print("  • hover over dropdown")
         print("  • fill username with john_doe")
         print("  • enter password123 into password")
+        print("  • select 'Option 1' from myDropdown")
+        print("  • submit (submit current form)")
         print()
         print("Search:")
         print("  • search for python tutorial")
@@ -371,10 +674,18 @@ class BrowserAutomation:
         print("  • take screenshot")
         print("  • scroll to footer")
         print("  • wait for loading-spinner")
+        print("  • wait for url results")
         print("  • get text from article-title")
+        print("  • get href attribute from link")
+        print("  • save page (save HTML)")
+        print()
+        print("Advanced:")
+        print("  • run javascript alert('hello')")
+        print("  • switch to frame 0")
+        print("  • switch to window 1")
+        print("  • export log (save task history)")
         print()
         print("Other:")
-        print("  • submit (submit current form)")
         print("  • help (show this message)")
         print("  • quit/exit (close browser)")
         print("-"*60 + "\n")
