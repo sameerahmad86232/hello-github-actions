@@ -1,0 +1,29 @@
+name: Lumio X Autopost via Buffer
+
+on:
+  schedule:
+    # 05:47 IST daily. Buffer publishes posts at 09:00, 14:00, 19:00 IST.
+    - cron: "17 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lumio-x-buffer
+  cancel-in-progress: false
+
+jobs:
+  schedule-posts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Schedule approved Lumio X posts
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: ${{ vars.BUFFER_CHANNEL_ID }}
+        run: python lumio-autopost/publish.py
