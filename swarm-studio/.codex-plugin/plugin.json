@@ -1,0 +1,7 @@
+{
+  "name": "swarm-studio",
+  "version": "0.1.0",
+  "description": "Head Coach workflow for 20 specialist website-building roles and a live activity studio.",
+  "author": {"name":"Swarm Studio"},
+  "skills": "./.agents/skills/"
+}

@@ -1,0 +1,38 @@
+{
+  "teams": [
+    {"id":"plan","name":"Plan","color":"#eab308"},
+    {"id":"base","name":"Base","color":"#ec4899"},
+    {"id":"build","name":"Build","color":"#3b82f6"},
+    {"id":"polish","name":"Polish","color":"#22c55e"},
+    {"id":"ship","name":"Ship","color":"#f97316"}
+  ],
+  "waves": [
+    {"name":"Plan","agents":["strategist","ux-architect","brand-designer","copywriter","seo"]},
+    {"name":"Foundation","agents":["type-tokens","layout-grid","imagery","theme"]},
+    {"name":"Build","agents":["hero","sections-a","sections-b","nav-footer","forms","motion"]},
+    {"name":"Review","agents":["responsive-qa","a11y","performance","security"]},
+    {"name":"Release","agents":["integrator"]}
+  ],
+  "roles": [
+    {"id":"strategist","team":"plan","goal":"Turn supplied goals and audience into a clear website brief and one CTA.","reads":["PROJECT.json"],"writes":["BRIEF.md"]},
+    {"id":"ux-architect","team":"plan","goal":"Define a mobile-first sitemap, section order and visitor flow.","reads":["BRIEF.md","PROJECT.json"],"writes":["structure.md"]},
+    {"id":"brand-designer","team":"plan","goal":"Define subject-specific palette, mood and original visual direction.","reads":["BRIEF.md","PROJECT.json"],"writes":["brand.md"]},
+    {"id":"copywriter","team":"plan","goal":"Write credible, plain-voice copy with no invented testimonials or claims.","reads":["BRIEF.md","structure.md","PROJECT.json"],"writes":["site/content.json"]},
+    {"id":"seo","team":"base","goal":"Set SEO titles, metadata, heading outline and honest schema guidance.","reads":["BRIEF.md","structure.md","site/content.json"],"writes":["seo.md"]},
+    {"id":"type-tokens","team":"base","goal":"Create the two-family maximum typography, spacing and color token system.","reads":["brand.md","BRIEF.md","site/tokens.css"],"writes":["site/tokens.css"]},
+    {"id":"layout-grid","team":"base","goal":"Create mobile-first shells and grids without horizontal overflow.","reads":["structure.md","site/tokens.css"],"writes":["site/layout.css"]},
+    {"id":"imagery","team":"base","goal":"Create original SVG/CSS graphics and icons only, no copied logos.","reads":["brand.md","site/tokens.css"],"writes":["site/assets/"]},
+    {"id":"hero","team":"build","goal":"Build the first screen and primary CTA as a semantic HTML fragment.","reads":["BRIEF.md","structure.md","site/content.json","site/tokens.css"],"writes":["site/sections/hero.html"]},
+    {"id":"sections-a","team":"build","goal":"Build services, features and pricing sections using verified copy.","reads":["structure.md","site/content.json","site/tokens.css"],"writes":["site/sections/main.html"]},
+    {"id":"sections-b","team":"build","goal":"Build FAQ, clearly marked examples if any, and closing CTA.","reads":["structure.md","site/content.json","site/tokens.css"],"writes":["site/sections/closing.html"]},
+    {"id":"nav-footer","team":"build","goal":"Build accessible navigation, mobile menu, and footer.","reads":["BRIEF.md","structure.md","site/content.json"],"writes":["site/sections/nav.html","site/sections/footer.html"]},
+    {"id":"forms","team":"polish","goal":"Implement progressive form enhancement, validation and safe feedback states.","reads":["structure.md","site/content.json"],"writes":["site/app.js"]},
+    {"id":"motion","team":"polish","goal":"Add restrained animation with reduced-motion support.","reads":["brand.md","site/layout.css"],"writes":["site/motion.css"]},
+    {"id":"theme","team":"base","goal":"Create light and dark modes using only defined color tokens.","reads":["brand.md","site/tokens.css"],"writes":["site/theme.css"]},
+    {"id":"responsive-qa","team":"polish","goal":"Check 360, 768, 1280 and 1440px widths; report reproduction steps and issues.","reads":["site/","BRIEF.md"],"writes":["reports/responsive-qa.md"],"reviewOnly":true},
+    {"id":"a11y","team":"ship","goal":"Audit headings, contrast, focus, labels, keyboard use and motion.","reads":["site/","BRIEF.md"],"writes":["reports/a11y.md"],"reviewOnly":true},
+    {"id":"performance","team":"ship","goal":"Audit image, font, script weight and layout shift risks.","reads":["site/","BRIEF.md"],"writes":["reports/performance.md"],"reviewOnly":true},
+    {"id":"security","team":"ship","goal":"Audit secrets, unsafe scripting, forms and external dependencies.","reads":["site/","BRIEF.md"],"writes":["reports/security.md"],"reviewOnly":true},
+    {"id":"integrator","team":"ship","goal":"Assemble final index.html and README; verify links and source ownership.","reads":["BRIEF.md","structure.md","brand.md","seo.md","reports/","site/"],"writes":["site/index.html","site/README.md"]}
+  ]
+}

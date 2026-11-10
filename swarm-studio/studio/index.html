@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a111b">
+  <title>Swarm Studio — live worker observability</title>
+  <link rel="stylesheet" href="/studio/style.css">
+  <script src="/studio/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark"><span class="brand-glyph" aria-hidden="true">⬡</span><div><strong>SWARM <em>STUDIO</em></strong><small>CODING AGENT ORCHESTRATION</small></div></div>
+      <div class="top-actions"><span class="live-dot"></span><span id="connection">Connecting</span><span class="header-line" aria-hidden="true"></span><span class="version">PREVIEW 0.1</span></div>
+    </header>
+    <main>
+      <section class="intro">
+        <div><p class="eyebrow">PROJECT CONTROL ROOM</p><h1>Twenty specialists. <span>One build.</span></h1><p>Live evidence from actual job events and file changes. No simulated operations.</p></div>
+        <div class="intro-side"><span class="tiny-label">CURRENT MODE</span><strong>Host-driven <span>↗</span></strong><small>Codex skill + local file observer</small></div>
+      </section>
+      <section class="metrics" aria-label="Live metrics">
+        <article class="metric"><span>AGENTS RUNNING</span><strong id="live">0</strong><small>Reported active roles</small></article>
+        <article class="metric"><span>FILE CHANGES</span><strong id="changes">0</strong><small>Observed writes</small></article>
+        <article class="metric"><span>CHANGES / SEC</span><strong id="ops">0</strong><small>Last 1 second</small></article>
+        <article class="metric"><span>ELAPSED</span><strong id="elapsed">0:00</strong><small>Since first event</small></article>
+        <article class="metric"><span>PEAK PARALLEL</span><strong id="peak">0</strong><small>Reported concurrent roles</small></article>
+      </section>
+      <div class="work-grid">
+        <section class="panel roster-panel" aria-label="Twenty agents">
+          <div class="panel-title"><div><span class="tiny-label">01 / WORKFORCE</span><h2>Specialists <span class="subtle">/ 20</span></h2></div><span class="pill">5 TEAMS</span></div>
+          <div id="roster" class="roster"><p class="muted">Loading role registry…</p></div>
+        </section>
+        <section class="panel preview-panel" aria-label="Site live preview">
+          <div class="panel-title preview-header"><div><span class="tiny-label">02 / RENDERER</span><h2>Website preview</h2></div><div class="device-switch" role="group" aria-label="Preview viewport"><button type="button" class="selected" data-width="desktop" aria-pressed="true">Desktop</button><button type="button" data-width="mobile" aria-pressed="false">Mobile</button></div></div>
+          <div class="browser-chrome"><div class="window-dots"><i></i><i></i><i></i></div><span class="url-bar">localhost / preview</span><button type="button" class="refresh" id="refresh" aria-label="Refresh preview">↻</button></div>
+          <div class="preview-stage"><div id="preview-shell" class="preview-shell"><iframe id="website" sandbox="allow-scripts allow-forms" src="/preview/" title="Website being built"></iframe></div></div>
+          <div class="preview-footer"><span><span class="live-dot"></span> FILE-WATCHED PREVIEW</span><span id="preview-size">Responsive viewport</span></div>
+        </section>
+        <section class="panel activity-panel" aria-label="Activity log">
+          <div class="panel-title"><div><span class="tiny-label">03 / EVENTS</span><h2>Activity feed</h2></div><button id="clear-filter" type="button" hidden>Clear filter ×</button></div>
+          <div id="activity" class="activity" aria-live="polite"><p class="muted">Waiting for real events.</p></div>
+        </section>
+      </div>
+      <section class="panel timeline-panel" aria-label="Team timeline">
+        <div class="panel-title"><div><span class="tiny-label">04 / EXECUTION</span><h2>Swarm timeline</h2></div><span class="timeline-help">Markers = recorded events · scroll horizontally to inspect</span></div>
+        <div class="timeline-scroll"><div id="timeline" class="timeline"><p class="muted">No activity recorded yet.</p></div></div>
+        <div class="legend"><span><i class="dot" style="--dot:#eab308"></i>Plan</span><span><i class="dot" style="--dot:#ec4899"></i>Base</span><span><i class="dot" style="--dot:#3b82f6"></i>Build</span><span><i class="dot" style="--dot:#22c55e"></i>Polish</span><span><i class="dot" style="--dot:#f97316"></i>Ship</span></div>
+      </section>
+      <footer><span>SWARM STUDIO · REAL EVENTS ONLY</span><span>20 permanent roles · host determines actual concurrency</span></footer>
+    </main>
+  </div>
+</body>
+</html>
